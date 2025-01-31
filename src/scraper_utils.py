@@ -3,9 +3,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from config import PAGE_LOAD_TIMEOUT, EXTRA_RENDER_TIME, SCROLL_WAIT_TIME, SCROLL_ITERATIONS
+from extractors.extract_email import extract_email
+from extractors.extract_mobile_phone import extract_mobile_phone
+from extractors.extract_name import extract_name  # Import Name extractor
 
 def scrape_page(driver, url):
-    """Navigates to the URL and extracts the person's information."""
+    """Navigates to the URL and extracts Name, Last Name, Email, and Mobile Phone."""
     
     # Ensure URL is properly formatted
     if not url.startswith("http"):
@@ -27,15 +30,21 @@ def scrape_page(driver, url):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(SCROLL_WAIT_TIME)
 
-        # 🔹 Extract email using refined XPath
-        try:
-            email_element = driver.find_element(By.XPATH, "//a[contains(@class, 't-text-primary-600') and starts-with(@href, 'mailto:')]")
-            email = email_element.get_attribute("href").replace("mailto:", "").strip()
-        except:
-            email = "Not found"
+        # 🔹 Extract Name, Last Name, Email, and Mobile Phone
+        first_name, last_name = extract_name(driver)
+        email = extract_email(driver)
+        mobile_phone = extract_mobile_phone(driver)
 
-        print(f"✅ Extracted Email: {email}")
-        return {"Email": email}
+        print(f"🆔 Name: {first_name} {last_name}")
+        print(f"📩 Email: {email}")
+        print(f"📱 Mobile Phone: {mobile_phone}")
+
+        return {
+            "Name": first_name,
+            "Last Name": last_name,
+            "Mobile Phone": mobile_phone,
+            "Email": email
+        }
 
     except Exception as e:
         print(f"⚠️ Error during scraping: {e}")

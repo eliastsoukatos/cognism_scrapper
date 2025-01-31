@@ -6,7 +6,7 @@ def save_to_csv(data, filename="output.csv"):
     file_exists = os.path.exists(filename)
 
     with open(filename, mode="a", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=data.keys())
+        writer = csv.DictWriter(file, fieldnames=["Name", "Last Name", "Mobile Phone", "Email"])
 
         # Write the header only if the file is new
         if not file_exists:
