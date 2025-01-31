@@ -15,10 +15,10 @@ def scrape_page(driver, url):
     """Navigates to the URL and extracts all relevant data."""
     
     if not url.startswith("http"):
-        print(f"⚠️ Invalid URL provided: {url}")
+        print(f"Invalid URL provided: {url}")
         return None
 
-    print(f"📡 Navigating to: {url}...")
+    print(f"Navigating to: {url}...")
     driver.get(url.strip())
 
     try:
@@ -42,13 +42,13 @@ def scrape_page(driver, url):
         # Ensure all data is formatted properly
         role = role.replace("\n", " ")  # Remove line breaks from role
 
-        print(f"🆔 Name: {first_name} {last_name}")
-        print(f"📩 Email: {email}")
-        print(f"📱 Mobile Phone: {mobile_phone}")
-        print(f"💼 Role: {role}")
-        print(f"📍 Location: {city}, {state}, {country} | Timezone: {timezone}")
-        print(f"🔗 LinkedIn: {linkedin_url}")
-        print(f"🏢 Company: {company_name} | 🌐 Website: {website} | 👥 Employees: {employees} | 📅 Founded: {founded}")
+        print(f"Name: {first_name} {last_name}")
+        print(f"Email: {email}")
+        print(f"Mobile Phone: {mobile_phone}")
+        print(f"Role: {role}")
+        print(f"Location: {city}, {state}, {country} | Timezone: {timezone}")
+        print(f"LinkedIn: {linkedin_url}")
+        print(f"Company: {company_name} | Website: {website} | Employees: {employees} | Founded: {founded}")
 
         return {
             "Name": first_name,
@@ -68,5 +68,5 @@ def scrape_page(driver, url):
         }
 
     except Exception as e:
-        print(f"⚠️ Error during scraping: {e}")
+        print(f"Error during scraping: {e}")
         return None
