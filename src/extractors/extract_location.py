@@ -1,19 +1,8 @@
 from selenium.webdriver.common.by import By
-
-# US States and their respective Timezones
-STATE_TIMEZONE_MAPPING = {
-    "California": "PT", "Oregon": "PT", "Washington": "PT", "Nevada": "PT",
-    "Idaho": "MT", "Montana": "MT", "Wyoming": "MT", "Utah": "MT", "Colorado": "MT", "Arizona": "MT", "New Mexico": "MT",
-    "North Dakota": "CT", "South Dakota": "CT", "Nebraska": "CT", "Kansas": "CT", "Oklahoma": "CT", "Texas": "CT",
-    "Minnesota": "CT", "Iowa": "CT", "Missouri": "CT", "Arkansas": "CT", "Louisiana": "CT", "Wisconsin": "CT", "Illinois": "CT",
-    "Mississippi": "CT", "Alabama": "CT", "Tennessee": "CT", "Kentucky": "CT",
-    "Indiana": "ET", "Ohio": "ET", "West Virginia": "ET", "Virginia": "ET", "North Carolina": "ET", "South Carolina": "ET",
-    "Georgia": "ET", "Florida": "ET", "Michigan": "ET", "Pennsylvania": "ET", "New York": "ET", "New Jersey": "ET",
-    "Connecticut": "ET", "Rhode Island": "ET", "Massachusetts": "ET", "Vermont": "ET", "New Hampshire": "ET", "Maine": "ET"
-}
+from data.timezones import get_timezone  # ✅ This should work now
 
 def extract_location(driver):
-    """Extracts the person's location details (City, State, Country) and assigns a timezone if in the USA."""
+    """Extracts the person's location details (City, State, Country) and assigns a timezone if available."""
     try:
         # Find the second div inside the role/location container
         location_element = driver.find_element(By.XPATH, "//div[contains(@class, 't-text-sm t-text-dark-400')]/div[2]")
@@ -32,8 +21,8 @@ def extract_location(driver):
         state = location_parts[1] if len(location_parts) > 1 else "Not found"
         country = location_parts[2] if len(location_parts) > 2 else "Not found"
 
-        # Determine timezone if country is United States
-        timezone = STATE_TIMEZONE_MAPPING.get(state, "Not found") if country == "United States" else "Not applicable"
+        # Get timezone based on state (US) or country (Europe/LatAm)
+        timezone = get_timezone(state, country)
 
         # Debugging print statement (remove in production)
         print(f"🌍 Parsed Location: City: {city}, State: {state}, Country: {country}, Timezone: {timezone}")
