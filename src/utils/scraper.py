@@ -16,15 +16,15 @@ def scrape_page(driver):
 
     try:
         # 🔹 Ensure the page has fully loaded before scraping
-        WebDriverWait(driver, PAGE_LOAD_TIMEOUT).until(
+        WebDriverWait(driver, PAGE_LOAD_TIMEOUT()).until(  # ✅ Randomized wait time
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-        time.sleep(EXTRA_RENDER_TIME)
+        time.sleep(EXTRA_RENDER_TIME())  # ✅ Randomized wait time
 
         # 🔹 Scroll to trigger lazy loading
         for _ in range(SCROLL_ITERATIONS):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(SCROLL_WAIT_TIME)
+            time.sleep(SCROLL_WAIT_TIME())  # ✅ Randomized wait time
 
         # 🔹 Extract Data
         first_name, last_name = extract_name(driver)
