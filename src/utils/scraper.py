@@ -11,26 +11,22 @@ from extractors.extract_location import extract_location
 from extractors.extract_linkedin import extract_linkedin
 from extractors.extract_company import extract_company  # Import Company Extractor
 
-def scrape_page(driver, url):
-    """Navigates to the URL and extracts all relevant data."""
-    
-    if not url.startswith("http"):
-        print(f"Invalid URL provided: {url}")
-        return None
-
-    print(f"Navigating to: {url}...")
-    driver.get(url.strip())
+def scrape_page(driver):
+    """Extracts all relevant data from the already loaded page (URL should be loaded before calling this)."""
 
     try:
+        # 🔹 Ensure the page has fully loaded before scraping
         WebDriverWait(driver, PAGE_LOAD_TIMEOUT).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
         time.sleep(EXTRA_RENDER_TIME)
 
+        # 🔹 Scroll to trigger lazy loading
         for _ in range(SCROLL_ITERATIONS):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(SCROLL_WAIT_TIME)
 
+        # 🔹 Extract Data
         first_name, last_name = extract_name(driver)
         email = extract_email(driver)
         mobile_phone = extract_mobile_phone(driver)
@@ -39,7 +35,7 @@ def scrape_page(driver, url):
         linkedin_url = extract_linkedin(driver)
         company_name, website, employees, founded = extract_company(driver)  # Extract Company Details
 
-        # Ensure all data is formatted properly
+        # 🔹 Format data properly
         role = role.replace("\n", " ")  # Remove line breaks from role
 
         print(f"Name: {first_name} {last_name}")

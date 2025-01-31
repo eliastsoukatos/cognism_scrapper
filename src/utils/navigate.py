@@ -17,4 +17,4 @@ def open_new_tab(driver, url):
     driver.switch_to.window(driver.window_handles[-1])  
 
     # Ensure the page loads
-    #time.sleep(TAB_LOAD_TIME)  # Controlled by .env
+    time.sleep(TAB_LOAD_TIME)  # Controlled by .env
