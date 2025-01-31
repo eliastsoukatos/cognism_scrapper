@@ -1,23 +1,28 @@
 import time
 from config import TAB_LOAD_TIME  # Import randomized time function
 
-def open_new_tab(driver, url):
-    """Opens a new tab with the profile URL and switches to it."""
-    
-    if not url.startswith("http"):
-        print("Error: Invalid URL format in urls.txt. Please enter a valid URL.")
-        return
+def open_new_tabs(driver, urls, batch_size=2):
+    """
+    Opens URLs in new tabs in batches.
+    :param driver: The Selenium WebDriver.
+    :param urls: List of URLs to open.
+    :param batch_size: Number of tabs to open at a time.
+    """
+    for i in range(0, len(urls), batch_size):
+        batch = urls[i:i + batch_size]  # Get a batch of URLs
+        
+        #print(f"Opening batch: {batch}")
 
-    print(f"Opening new tab: {url}")
+        for url in batch:
+            if not url.startswith("http"):
+                print(f"Skipping invalid URL: {url}")
+                continue
 
-    # Open a new tab
-    driver.execute_script("window.open('', '_blank');")
+            #print(f"Opening new tab: {url}")
+            driver.execute_script("window.open('', '_blank');")
+            driver.switch_to.window(driver.window_handles[-1])  
+            driver.get(url)
+            time.sleep(TAB_LOAD_TIME())  # Wait for tab to load
 
-    # Switch to the new tab
-    driver.switch_to.window(driver.window_handles[-1])  
-
-    # Navigate to the URL in the new tab
-    driver.get(url)
-
-    # Ensure the page loads with a randomized delay
-    time.sleep(TAB_LOAD_TIME())  # ✅ FIXED: Added parentheses to execute the function
+        # Process each tab before opening new ones
+        yield driver.window_handles[-batch_size:]  # Return the last opened tabs
