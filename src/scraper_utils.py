@@ -2,6 +2,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from config import PAGE_LOAD_TIMEOUT, EXTRA_RENDER_TIME, SCROLL_WAIT_TIME, SCROLL_ITERATIONS
 
 def scrape_page(driver, url):
     """Navigates to the URL and extracts the person's information."""
@@ -16,15 +17,15 @@ def scrape_page(driver, url):
 
     try:
         # 🔹 Wait for the page to fully load
-        WebDriverWait(driver, 15).until(
+        WebDriverWait(driver, PAGE_LOAD_TIMEOUT).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-        time.sleep(5)  # Extra time for rendering
+        time.sleep(EXTRA_RENDER_TIME)  # Extra time for rendering
 
         # 🔹 Scroll to trigger lazy loading
-        for _ in range(5):
+        for _ in range(SCROLL_ITERATIONS):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(2)
+            time.sleep(SCROLL_WAIT_TIME)
 
         # 🔹 Extract email using refined XPath
         try:
