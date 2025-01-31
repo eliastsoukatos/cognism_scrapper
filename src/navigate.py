@@ -1,6 +1,5 @@
 import time
-from selenium.webdriver.common.keys import Keys
-
+from config import TAB_LOAD_TIME  
 def open_new_tab(driver, url):
     """Opens a new tab with the profile URL and switches to it."""
     
@@ -14,10 +13,10 @@ def open_new_tab(driver, url):
     driver.execute_script("window.open('', '_blank');")
 
     # Switch to the new tab
-    driver.switch_to.window(driver.window_handles[-1])  # ✅ Always switch to the latest tab
+    driver.switch_to.window(driver.window_handles[-1])  
 
     # Navigate to the URL in the new tab
     driver.get(url)
 
     # Ensure the page loads
-    time.sleep(3)  # Optional delay to ensure page loads properly
+    time.sleep(TAB_LOAD_TIME) 

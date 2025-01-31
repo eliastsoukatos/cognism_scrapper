@@ -17,21 +17,21 @@ def main():
     wait_for_manual_login(driver)  # Wait for manual login
 
     # 🔹 Fetch URL from file
-    url = get_url_from_file()  # ✅ Fetch the URL here
+    url = get_url_from_file()  # Fetch the URL here
 
     if not url.startswith("http"):
         print("Error: Invalid URL format in urls.txt. Please enter a valid URL.")
         return
 
     # 🔹 Open a new tab and navigate to profile URL
-    open_new_tab(driver, url)  # ✅ Now correctly passing (driver, url)
+    open_new_tab(driver, url)  # Now correctly passing (driver, url)
 
     # 🔹 Scrape the page
-    extracted_data = scrape_page(driver, url)  # ✅ Pass driver + URL correctly
+    extracted_data = scrape_page(driver, url)  # Pass driver + URL correctly
     if extracted_data:
         save_to_csv(extracted_data)  # Save data to CSV
 
-    print("🚀 Scraping completed.")
+    print("Scraping completed.")
     driver.quit()
 
 if __name__ == "__main__":

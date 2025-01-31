@@ -20,10 +20,10 @@ def save_to_csv(data, filename="output.csv"):
                     writer.writeheader()
                 writer.writerow(data)
 
-            print(f"💾 Data saved to {filename}")
+            print(f"Data saved to {filename}")
             return
         except PermissionError:
-            print(f"⚠️ File {filename} is locked. Retrying {attempt+1}/{max_retries}...")
+            print(f"File {filename} is locked. Retrying {attempt+1}/{max_retries}...")
             time.sleep(retry_delay)
 
-    print(f"❌ Unable to write to {filename}. Ensure the file is not open and try again.")
+    print(f"Unable to write to {filename}. Ensure the file is not open and try again.")
