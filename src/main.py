@@ -16,7 +16,7 @@ def main():
     driver = initialize_driver()
 
     # 🔹 Open Cognism for manual login
-    driver.get("https://app.cognism.com/login")
+    driver.get("https://app.cognism.com/auth/sign-in")
     wait_for_manual_login(driver)  # Pass driver instance
 
     # 🔹 Once the user confirms login, proceed with scraping
