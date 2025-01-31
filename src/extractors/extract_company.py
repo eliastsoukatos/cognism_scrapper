@@ -19,8 +19,8 @@ def extract_company(driver):
 
         # Extract employee headcount
         try:
-            employees_element = driver.find_element(By.XPATH, "//span[contains(text(), 'Employee Headcount')]/following-sibling::text()")
-            employees = employees_element.text.strip()
+            employees_element = driver.find_element(By.XPATH, "//span[contains(text(), 'Employee Headcount')]/parent::span")
+            employees = employees_element.text.replace("Employee Headcount", "").strip()
         except:
             employees = "Not found"
 
