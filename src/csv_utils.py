@@ -7,7 +7,7 @@ def save_to_csv(data, filename="output.csv"):
 
     with open(filename, mode="a", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=[
-            "Name", "Last Name", "Mobile Phone", "Email", "Role", "City", "State", "Country", "Timezone"
+            "Name", "Last Name", "Mobile Phone", "Email", "Role", "City", "State", "Country", "Timezone", "LinkedIn URL"
         ])
 
         if not file_exists:
@@ -22,7 +22,8 @@ def save_to_csv(data, filename="output.csv"):
             "City": data["City"],
             "State": data["State"],
             "Country": data["Country"],
-            "Timezone": data["Timezone"]
+            "Timezone": data["Timezone"],
+            "LinkedIn URL": data["LinkedIn URL"]
         })
 
         print(f"💾 Data saved to {filename}")
