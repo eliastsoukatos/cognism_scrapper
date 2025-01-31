@@ -172,3 +172,5 @@ cython_debug/
 
 # Output
 output.csv
+
+testing.txt
