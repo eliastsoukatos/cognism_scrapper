@@ -1,29 +1,29 @@
 import csv
 import os
+import time
 
 def save_to_csv(data, filename="output.csv"):
-    """Saves the extracted data to a CSV file correctly formatted."""
-    file_exists = os.path.exists(filename)
+    """Saves the extracted data to a CSV file, retrying if the file is locked."""
+    max_retries = 5
+    retry_delay = 2  # Seconds to wait before retrying
 
-    with open(filename, mode="a", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=[
-            "Name", "Last Name", "Mobile Phone", "Email", "Role", "City", "State", "Country", "Timezone", "LinkedIn URL"
-        ])
+    for attempt in range(max_retries):
+        try:
+            file_exists = os.path.exists(filename)
+            with open(filename, mode="a", newline="", encoding="utf-8") as file:
+                writer = csv.DictWriter(file, fieldnames=[
+                    "Name", "Last Name", "Mobile Phone", "Email", "Role",
+                    "City", "State", "Country", "Timezone", "LinkedIn URL",
+                    "Company Name", "Website", "Employees", "Founded"
+                ])
+                if not file_exists:
+                    writer.writeheader()
+                writer.writerow(data)
 
-        if not file_exists:
-            writer.writeheader()
+            print(f"💾 Data saved to {filename}")
+            return
+        except PermissionError:
+            print(f"⚠️ File {filename} is locked. Retrying {attempt+1}/{max_retries}...")
+            time.sleep(retry_delay)
 
-        writer.writerow({
-            "Name": data["Name"],
-            "Last Name": data["Last Name"],
-            "Mobile Phone": data["Mobile Phone"],
-            "Email": data["Email"],
-            "Role": data["Role"],
-            "City": data["City"],
-            "State": data["State"],
-            "Country": data["Country"],
-            "Timezone": data["Timezone"],
-            "LinkedIn URL": data["LinkedIn URL"]
-        })
-
-        print(f"💾 Data saved to {filename}")
+    print(f"❌ Unable to write to {filename}. Ensure the file is not open and try again.")

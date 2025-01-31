@@ -8,7 +8,8 @@ from extractors.extract_mobile_phone import extract_mobile_phone
 from extractors.extract_name import extract_name
 from extractors.extract_role import extract_role
 from extractors.extract_location import extract_location
-from extractors.extract_linkedin import extract_linkedin  # Import LinkedIn extractor
+from extractors.extract_linkedin import extract_linkedin
+from extractors.extract_company import extract_company  # Import Company Extractor
 
 def scrape_page(driver, url):
     """Navigates to the URL and extracts all relevant data."""
@@ -35,7 +36,8 @@ def scrape_page(driver, url):
         mobile_phone = extract_mobile_phone(driver)
         role = extract_role(driver)
         city, state, country, timezone = extract_location(driver)
-        linkedin_url = extract_linkedin(driver)  # Extract LinkedIn URL
+        linkedin_url = extract_linkedin(driver)
+        company_name, website, employees, founded = extract_company(driver)  # Extract Company Details
 
         # Ensure all data is formatted properly
         role = role.replace("\n", " ")  # Remove line breaks from role
@@ -46,6 +48,7 @@ def scrape_page(driver, url):
         print(f"💼 Role: {role}")
         print(f"📍 Location: {city}, {state}, {country} | Timezone: {timezone}")
         print(f"🔗 LinkedIn: {linkedin_url}")
+        print(f"🏢 Company: {company_name} | 🌐 Website: {website} | 👥 Employees: {employees} | 📅 Founded: {founded}")
 
         return {
             "Name": first_name,
@@ -57,7 +60,11 @@ def scrape_page(driver, url):
             "State": state,
             "Country": country,
             "Timezone": timezone,
-            "LinkedIn URL": linkedin_url  # Add LinkedIn URL
+            "LinkedIn URL": linkedin_url,
+            "Company Name": company_name,
+            "Website": website,
+            "Employees": employees,
+            "Founded": founded
         }
 
     except Exception as e:
