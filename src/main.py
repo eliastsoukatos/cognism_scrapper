@@ -8,11 +8,11 @@ from utils.load_file import get_urls_from_file  # Import URL reading function
 
 def main():
     """Main process for Cognism scraping."""
-    
-    # Read all URLs from the text file
+
+    # Read URLs from file
     urls = get_urls_from_file()
     if not urls:
-        print("No valid URLs found in urls.txt.")
+        print("⚠️ No valid URLs found in urls.txt.")
         return
 
     # Initialize WebDriver
@@ -20,26 +20,40 @@ def main():
 
     # Open Cognism login page
     driver.get("https://app.cognism.com/auth/sign-in")
-    wait_for_manual_login(driver)  # Wait for manual login
+    wait_for_manual_login(driver)
 
-    # Process URLs in batches of 2
-    for tabs in open_new_tabs(driver, urls):  # Uses `TABS_PER_BATCH` from config.py
+    # Process URLs in batches
+    for tabs in open_new_tabs(driver, urls):
         for tab in tabs:
-            driver.switch_to.window(tab)  # Switch to each opened tab
-            extracted_data = scrape_page(driver)  # Extract data from the tab
-            if extracted_data:
-                save_to_csv(extracted_data)  # Save data to CSV
-            time.sleep(2)  # Small delay between scraping sessions
+            try:
+                driver.switch_to.window(tab)
+                extracted_data = scrape_page(driver)
+                if extracted_data:
+                    save_to_csv(extracted_data)
+                time.sleep(2)  # Small delay to avoid rate limits
+            except Exception as e:
+                print(f"⚠️ Error processing tab: {e}")
 
-        # Close processed tabs before opening new ones
+        # Close processed tabs safely
         for tab in tabs:
-            driver.switch_to.window(tab)
-            driver.close()
+            try:
+                driver.switch_to.window(tab)
+                driver.close()
+            except Exception as e:
+                print(f"⚠️ Error closing tab: {e}")
 
-        # Switch back to the main window before continuing
-        driver.switch_to.window(driver.window_handles[0])
+        # Ensure main window is still valid before switching back
+        try:
+            if driver.window_handles:
+                driver.switch_to.window(driver.window_handles[0])
+            else:
+                print("⚠️ No active windows remaining. Closing session.")
+                driver.quit()
+                return
+        except Exception as e:
+            print(f"⚠️ Error switching back to main window: {e}")
 
-    print("Scraping completed.")
+    print("✅ Scraping completed.")
     driver.quit()
 
 if __name__ == "__main__":

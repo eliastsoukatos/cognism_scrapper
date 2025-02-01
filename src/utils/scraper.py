@@ -9,42 +9,57 @@ from extractors.extract_name import extract_name
 from extractors.extract_role import extract_role
 from extractors.extract_location import extract_location
 from extractors.extract_linkedin import extract_linkedin
-from extractors.extract_company import extract_company  # Import Company Extractor
+from extractors.extract_company import extract_company
 
 def scrape_page(driver):
-    """Extracts all relevant data from the already loaded page (URL should be loaded before calling this)."""
+    """Extracts all relevant data from the already loaded page."""
 
     try:
-        # 🔹 Ensure the page has fully loaded before scraping
-        WebDriverWait(driver, PAGE_LOAD_TIMEOUT()).until(  # ✅ Randomized wait time
+        # Ensure page has fully loaded
+        WebDriverWait(driver, PAGE_LOAD_TIMEOUT).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
-        time.sleep(EXTRA_RENDER_TIME())  # ✅ Randomized wait time
+        time.sleep(EXTRA_RENDER_TIME)
 
-        # 🔹 Scroll to trigger lazy loading
+        # Scroll down to trigger lazy loading
         for _ in range(SCROLL_ITERATIONS):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(SCROLL_WAIT_TIME())  # ✅ Randomized wait time
+            time.sleep(SCROLL_WAIT_TIME)
 
-        # 🔹 Extract Data
+        # Extract Data with Error Handling
         first_name, last_name = extract_name(driver)
         email = extract_email(driver)
         mobile_phone = extract_mobile_phone(driver)
-        role = extract_role(driver)
-        city, state, country, timezone = extract_location(driver)
-        linkedin_url = extract_linkedin(driver)
-        company_name, website, employees, founded = extract_company(driver)  # Extract Company Details
 
-        # 🔹 Format data properly
-        role = role.replace("\n", " ")  # Remove line breaks from role
+        try:
+            role = extract_role(driver)
+        except Exception:
+            print("⚠️ Error extracting role. Element not found.")
+            role = "Not found"
 
-        print(f"Name: {first_name} {last_name}")
-        print(f"Email: {email}")
-        print(f"Mobile Phone: {mobile_phone}")
-        print(f"Role: {role}")
-        print(f"Location: {city}, {state}, {country} | Timezone: {timezone}")
-        print(f"LinkedIn: {linkedin_url}")
-        print(f"Company: {company_name} | Website: {website} | Employees: {employees} | Founded: {founded}")
+        try:
+            city, state, country, timezone = extract_location(driver)
+        except Exception:
+            print("⚠️ Error extracting location. Element not found.")
+            city, state, country, timezone = "Not found", "Not found", "Not found", "Not applicable"
+
+        try:
+            linkedin_url = extract_linkedin(driver)
+        except Exception:
+            print("⚠️ Error extracting LinkedIn URL. Element not found.")
+            linkedin_url = "Not found"
+
+        try:
+            company_name, website, employees, founded = extract_company(driver)
+        except Exception:
+            print("⚠️ Error extracting company details. Element not found.")
+            company_name, website, employees, founded = "Not found", "Not found", "Not found", "Not found"
+
+        # Print extracted data
+        print(f"💼 Role: {role}")
+        print(f"📍 Location: {city}, {state}, {country} | Timezone: {timezone}")
+        print(f"🔗 LinkedIn: {linkedin_url}")
+        print(f"🏢 Company: {company_name} | Website: {website} | Employees: {employees} | Founded: {founded}")
 
         return {
             "Name": first_name,
@@ -64,5 +79,5 @@ def scrape_page(driver):
         }
 
     except Exception as e:
-        print(f"Error during scraping: {e}")
+        print(f"⚠️ Error during scraping: {e}")
         return None
