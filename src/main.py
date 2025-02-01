@@ -23,7 +23,7 @@ def main():
     wait_for_manual_login(driver)  # Wait for manual login
 
     # Process URLs in batches of 2
-    for tabs in open_new_tabs(driver, urls, batch_size=2):
+    for tabs in open_new_tabs(driver, urls):  # Uses `TABS_PER_BATCH` from config.py
         for tab in tabs:
             driver.switch_to.window(tab)  # Switch to each opened tab
             extracted_data = scrape_page(driver)  # Extract data from the tab
