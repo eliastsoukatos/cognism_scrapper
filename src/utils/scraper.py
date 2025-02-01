@@ -12,50 +12,49 @@ from extractors.extract_linkedin import extract_linkedin
 from extractors.extract_company import extract_company
 
 def scrape_page(driver):
-    """Extracts all relevant data from the already loaded page."""
-
+    """Extracts all relevant data from the currently loaded page."""
     try:
-        # Ensure page has fully loaded
+        # Espera a que la página cargue completamente
         WebDriverWait(driver, PAGE_LOAD_TIMEOUT).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
         time.sleep(EXTRA_RENDER_TIME)
 
-        # Scroll down to trigger lazy loading
+        # Realiza un scroll para cargar más contenido si es necesario
         for _ in range(SCROLL_ITERATIONS):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(SCROLL_WAIT_TIME)
 
-        # Extract Data with Error Handling
+        # Extrae los datos de la página
         first_name, last_name = extract_name(driver)
         email = extract_email(driver)
         mobile_phone = extract_mobile_phone(driver)
 
         try:
             role = extract_role(driver)
-        except Exception:
+        except:
             print("⚠️ Error extracting role. Element not found.")
             role = "Not found"
 
         try:
             city, state, country, timezone = extract_location(driver)
-        except Exception:
+        except:
             print("⚠️ Error extracting location. Element not found.")
             city, state, country, timezone = "Not found", "Not found", "Not found", "Not applicable"
 
         try:
             linkedin_url = extract_linkedin(driver)
-        except Exception:
+        except:
             print("⚠️ Error extracting LinkedIn URL. Element not found.")
             linkedin_url = "Not found"
 
         try:
             company_name, website, employees, founded = extract_company(driver)
-        except Exception:
+        except:
             print("⚠️ Error extracting company details. Element not found.")
             company_name, website, employees, founded = "Not found", "Not found", "Not found", "Not found"
 
-        # Print extracted data
+        # Imprime los datos extraídos
         print(f"💼 Role: {role}")
         print(f"📍 Location: {city}, {state}, {country} | Timezone: {timezone}")
         print(f"🔗 LinkedIn: {linkedin_url}")
