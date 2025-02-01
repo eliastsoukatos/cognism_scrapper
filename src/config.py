@@ -13,11 +13,12 @@ COGNISM_PASSWORD = os.getenv("COGNISM_PASSWORD")
 def randomize_wait_time(base_time):
     return round(base_time * random.uniform(0.5, 1.5), 2)  # Adds variability
 
-# Function to randomize batch size while ensuring it's an integer
-def randomize_batch_size(base_size):
+# Function to randomize batch size per batch (changes each time)
+def get_random_batch_size():
+    base_size = int(os.getenv("TABS_PER_BATCH", 2))  # Default batch size
     min_val = max(1, base_size - 1)  # Ensure at least 1 tab per batch
-    max_val = base_size + 1          # Slight variation
-    return random.randint(min_val, max_val)  # Random integer within range
+    max_val = base_size + 1  # Slight variation
+    return random.randint(min_val, max_val)  # ✅ Generates a new value every time
 
 # Time settings with randomization
 SCROLL_ITERATIONS = int(os.getenv("SCROLL_ITERATIONS", 3))  # Fixed integer
@@ -29,6 +30,3 @@ TAB_LOAD_TIME = randomize_wait_time(float(os.getenv("TAB_LOAD_TIME", 3)))
 
 # Randomized wait time between scraping pages
 SCRAPING_DELAY = randomize_wait_time(float(os.getenv("SCRAPING_DELAY", 2)))  
-
-# Randomized batch size for opening tabs
-TABS_PER_BATCH = randomize_batch_size(int(os.getenv("TABS_PER_BATCH", 2)))  # ✅ Ensures whole number
