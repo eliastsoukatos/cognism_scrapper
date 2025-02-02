@@ -13,9 +13,40 @@ def get_existing_urls():
     
     :return: A dictionary of URLs with their associated segments.
     """
+    
     if not os.path.exists(DB_PATH):
-        print(f"❌ Database file not found: {DB_PATH}")
-        exit(1)
+        print(f"⚠️ Database file not found: {DB_PATH}. Creating a new database...")
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    # Create the contacts table if it does not exist
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS contacts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Name TEXT,
+        Last_Name TEXT,
+        Mobile_Phone TEXT,
+        Email TEXT,
+        Role TEXT,
+        City TEXT,
+        State TEXT,
+        Country TEXT,
+        Timezone TEXT,
+        LinkedIn_URL TEXT,
+        Company_Name TEXT,
+        Website TEXT,
+        Employees TEXT,
+        Founded TEXT,
+        Segment TEXT,
+        Timestamp TEXT,
+        Cognism_URL TEXT
+    )
+''')
+    
+    conn.commit()
+    conn.close()
+    print(f"✅ Database created successfully at: {DB_PATH}")
 
     try:
         print(f"🔍 Connecting to database at: {DB_PATH}")  # Debugging
