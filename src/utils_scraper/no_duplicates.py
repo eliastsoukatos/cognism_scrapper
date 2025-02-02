@@ -1,6 +1,7 @@
 import sqlite3
 import os
 from utils_scraper.load_file import get_urls_from_file
+from utils_scraper.database import create_table
 from config import OVERWRITE_SEGMENT  # Import overwrite setting
 
 # Get the correct database path dynamically
@@ -13,40 +14,13 @@ def get_existing_urls():
     
     :return: A dictionary of URLs with their associated segments.
     """
-    
+   
     if not os.path.exists(DB_PATH):
-        print(f"⚠️ Database file not found: {DB_PATH}. Creating a new database...")
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+        print(f"⚠️ Database file not found: {DB_PATH}. Ensuring database structure...")
+        create_table()  # Call the function from database.py
+        print(f"✅ Database ready at: {DB_PATH}")
     
     # Create the contacts table if it does not exist
-
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS contacts (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        Name TEXT,
-        Last_Name TEXT,
-        Mobile_Phone TEXT,
-        Email TEXT,
-        Role TEXT,
-        City TEXT,
-        State TEXT,
-        Country TEXT,
-        Timezone TEXT,
-        LinkedIn_URL TEXT,
-        Company_Name TEXT,
-        Website TEXT,
-        Employees TEXT,
-        Founded TEXT,
-        Segment TEXT,
-        Timestamp TEXT,
-        Cognism_URL TEXT
-    )
-''')
-    
-    conn.commit()
-    conn.close()
-    print(f"✅ Database created successfully at: {DB_PATH}")
 
     try:
         print(f"🔍 Connecting to database at: {DB_PATH}")  # Debugging
