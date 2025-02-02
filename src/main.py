@@ -4,6 +4,7 @@ from utils.database import save_to_db, print_db_path
 from utils.scraper import scrape_page
 from utils.selenium_setup import initialize_driver
 from utils.load_file import get_urls_from_file
+from utils.no_duplicates import filter_new_urls
 from utils.auth import wait_for_manual_login
 from utils.navigate import open_new_tabs
 from config import SCRAPING_DELAY  # ✅ Import randomized delay time
@@ -11,16 +12,16 @@ from config import SCRAPING_DELAY  # ✅ Import randomized delay time
 def main():
     """Main process for Cognism scraping."""
     
-    # Show the database path to ensure we're writing to the correct file
-    print_db_path()
-
-    # Load URLs from file
-    url_entries = get_urls_from_file()
+    # Load only new URLs that are not in the database
+    url_entries = filter_new_urls()
+    
     if not url_entries:
-        print("⚠️ No valid URLs found in urls.csv.")
+        print("⚠️ No new URLs found. All entries already exist in the database.")
         return
 
-    urls = [entry["url"] for entry in url_entries]  # ✅ Extract only URLs for navigation
+    urls = [entry["url"] for entry in url_entries]  # ✅ Extract only unique URLs for processing
+
+    print(f"✅ {len(urls)} new URLs found and ready for processing.")
 
     # Initialize WebDriver
     driver = initialize_driver()
