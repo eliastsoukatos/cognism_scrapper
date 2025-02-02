@@ -1,11 +1,11 @@
 import sqlite3
 import os
-from utils_scraper.load_file import get_urls_from_file
-from utils_scraper.database import create_table
+from utils_contacts.load_file import get_urls_from_file
+from utils_contacts.database import create_table
 from config import OVERWRITE_SEGMENT  # Import overwrite setting
 
 # Get the correct database path dynamically
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Gets 'utils_scraper' folder path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Gets 'utils_contacts' folder path
 DB_PATH = os.path.abspath(os.path.join(BASE_DIR, "../../contacts.db"))  # Adjust to correct database
 
 def get_existing_urls():
