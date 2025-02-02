@@ -1,12 +1,12 @@
 import time
 import os
-from utils.database import save_to_db, print_db_path
-from utils.scraper import scrape_page
-from utils.selenium_setup import initialize_driver
-from utils.load_file import get_urls_from_file
-from utils.no_duplicates import filter_new_urls
-from utils.auth import wait_for_manual_login
-from utils.navigate import open_new_tabs
+from utils_scraper.database import save_to_db, print_db_path
+from utils_scraper.scraper import scrape_page
+from utils_scraper.selenium_setup import initialize_driver
+from utils_scraper.load_file import get_urls_from_file
+from utils_scraper.no_duplicates import filter_new_urls
+from utils_scraper.auth import wait_for_manual_login
+from utils_scraper.navigate import open_new_tabs
 from config import SCRAPING_DELAY  # ✅ Import randomized delay time
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Oculta los warnings de TensorFlow

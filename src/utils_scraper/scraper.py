@@ -3,13 +3,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from config import PAGE_LOAD_TIMEOUT, EXTRA_RENDER_TIME, SCROLL_WAIT_TIME, SCROLL_ITERATIONS
-from extractors.extract_email import extract_email
-from extractors.extract_mobile_phone import extract_mobile_phone
-from extractors.extract_name import extract_name
-from extractors.extract_role import extract_role
-from extractors.extract_location import extract_location
-from extractors.extract_linkedin import extract_linkedin
-from extractors.extract_company import extract_company
+from contact_extractors.extract_email import extract_email
+from contact_extractors.extract_mobile_phone import extract_mobile_phone
+from contact_extractors.extract_name import extract_name
+from contact_extractors.extract_role import extract_role
+from contact_extractors.extract_location import extract_location
+from contact_extractors.extract_linkedin import extract_linkedin
+from contact_extractors.extract_company import extract_company
 
 def scrape_page(driver):
     """Extracts all relevant data from the currently loaded page."""
