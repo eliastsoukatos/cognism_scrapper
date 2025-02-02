@@ -9,7 +9,20 @@ from utils.auth import wait_for_manual_login
 from utils.navigate import open_new_tabs
 from config import SCRAPING_DELAY  # ✅ Import randomized delay time
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Oculta los warnings de TensorFlow
+
 def main():
+
+    # Initialize WebDriver
+    driver = initialize_driver()
+
+    # Open Cognism login page
+    driver.get("https://app.cognism.com/auth/sign-in")
+    wait_for_manual_login(driver)
+
+    # Save the initial login tab
+    login_tab = driver.current_window_handle 
+
     """Main process for Cognism scraping."""
     
     # Load only new URLs that are not in the database
@@ -22,13 +35,6 @@ def main():
     urls = [entry["url"] for entry in url_entries]  # ✅ Extract only unique URLs for processing
 
     print(f"✅ {len(urls)} new URLs found and ready for processing.")
-
-    # Initialize WebDriver
-    driver = initialize_driver()
-
-    # Open Cognism login page
-    driver.get("https://app.cognism.com/auth/sign-in")
-    wait_for_manual_login(driver)
 
     # Save the initial login tab
     login_tab = driver.current_window_handle  
