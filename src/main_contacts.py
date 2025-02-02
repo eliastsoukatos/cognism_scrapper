@@ -2,7 +2,7 @@ import time
 import os
 from utils_contacts.database import save_to_db, print_db_path
 from utils_contacts.scraper import scrape_page
-from utils_contacts.selenium_setup import initialize_driver
+from utils.selenium_setup import initialize_driver
 from utils_contacts.load_file import get_urls_from_file
 from utils_contacts.no_duplicates import filter_new_urls
 from utils.auth import wait_for_manual_login
@@ -11,8 +11,9 @@ from config import SCRAPING_DELAY  # ✅ Import randomized delay time
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Oculta los warnings de TensorFlow
 
-def main():
-
+def run_contacts_scraper():
+    """Main process for Cognism scraping."""
+    
     # Initialize WebDriver
     driver = initialize_driver()
 
@@ -23,8 +24,6 @@ def main():
     # Save the initial login tab
     login_tab = driver.current_window_handle 
 
-    """Main process for Cognism scraping."""
-    
     # Load only new URLs that are not in the database
     url_entries = filter_new_urls()
     
@@ -35,9 +34,6 @@ def main():
     urls = [entry["url"] for entry in url_entries]  # ✅ Extract only unique URLs for processing
 
     print(f"✅ {len(urls)} new URLs found and ready for processing.")
-
-    # Save the initial login tab
-    login_tab = driver.current_window_handle  
 
     # Process URLs in batches
     for batch_index, tabs in enumerate(open_new_tabs(driver, urls)):  
@@ -115,6 +111,3 @@ def main():
 
     print("✅ Scraping completed.")
     driver.quit()
-
-if __name__ == "__main__":
-    main()
