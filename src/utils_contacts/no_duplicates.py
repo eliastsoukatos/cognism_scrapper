@@ -1,7 +1,7 @@
 import sqlite3
 import os
 from utils_contacts.load_file import get_urls_from_file
-from utils_contacts.database import create_table
+from utils.create_database import create_table
 from config import OVERWRITE_SEGMENT  # Import overwrite setting
 
 # Get the correct database path dynamically
