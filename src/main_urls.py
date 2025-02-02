@@ -5,7 +5,7 @@ from utils.selenium_setup import initialize_driver  # ✅ Updated import path
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Hides TensorFlow warnings
 
 def run_urls_scraper():
-    """Logs into Cognism using Selenium and waits for manual login."""
+    """Logs into Cognism using Selenium, waits for manual login, and prompts for industry segment input."""
     
     # Initialize WebDriver
     driver = initialize_driver()
@@ -16,4 +16,11 @@ def run_urls_scraper():
 
     print("✅ Successfully logged into Cognism.")
 
-    return driver  # Optional: Return the driver if needed later
+    print(f"Now create a search of contacts on Cognism and input their segment.")
+
+    # Prompt user for input
+    industry_segment = input("📌 Input the Company's Industry Segment: ")
+
+    print(f"✅ Industry segment selected: {industry_segment}")
+
+    return driver, industry_segment  # Optional: Return values for later use
