@@ -5,7 +5,7 @@ from utils_contacts.scraper import scrape_page
 from utils_contacts.selenium_setup import initialize_driver
 from utils_contacts.load_file import get_urls_from_file
 from utils_contacts.no_duplicates import filter_new_urls
-from utils_contacts.auth import wait_for_manual_login
+from utils.auth import wait_for_manual_login
 from utils_contacts.navigate import open_new_tabs
 from config import SCRAPING_DELAY  # ✅ Import randomized delay time
 
