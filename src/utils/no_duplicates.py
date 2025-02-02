@@ -1,6 +1,7 @@
 import sqlite3
 import os
 from utils.load_file import get_urls_from_file
+from config import OVERWRITE_SEGMENT  # Import overwrite setting
 
 # Get the correct database path dynamically
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Gets 'utils' folder path
@@ -10,7 +11,7 @@ def get_existing_urls():
     """
     Fetches all existing Cognism URLs from the contacts table in the SQLite database.
     
-    :return: A set of URLs already present in the database.
+    :return: A dictionary of URLs with their associated segments.
     """
     if not os.path.exists(DB_PATH):
         print(f"❌ Database file not found: {DB_PATH}")
@@ -21,8 +22,8 @@ def get_existing_urls():
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
-        cursor.execute("SELECT Cognism_URL FROM contacts")
-        existing_urls = {row[0] for row in cursor.fetchall() if row[0]}  # Convert to a set for fast lookup
+        cursor.execute("SELECT Cognism_URL, Segment FROM contacts")
+        existing_urls = {row[0]: row[1] for row in cursor.fetchall() if row[0]}  # Store as {url: segment}
 
         conn.close()
         print(f"✅ Found {len(existing_urls)} existing URLs in database.")
@@ -30,11 +31,31 @@ def get_existing_urls():
 
     except sqlite3.Error as e:
         print(f"❌ Database error: {e}")
-        return set()
+        return {}
+
+def update_segment(url, new_segment):
+    """
+    Updates the segment for an existing Cognism URL in the database.
+
+    :param url: The Cognism URL to update.
+    :param new_segment: The new segment to overwrite.
+    """
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        cursor.execute("UPDATE contacts SET Segment = ? WHERE Cognism_URL = ?", (new_segment, url))
+        conn.commit()
+        conn.close()
+        print(f"🔄 Updated segment for URL: {url}")
+
+    except sqlite3.Error as e:
+        print(f"❌ Error updating segment for {url}: {e}")
 
 def filter_new_urls():
     """
     Filters out URLs that already exist in the database.
+    If a URL exists but has a different segment, update the segment (if enabled in config).
     
     :return: A list of new URLs that are not present in the database.
     """
@@ -45,8 +66,28 @@ def filter_new_urls():
     # Get existing URLs from the database
     existing_urls = get_existing_urls()
 
-    # Filter out URLs that already exist
-    new_urls = [entry for entry in url_entries if entry["url"] not in existing_urls]
+    new_urls = []  # Store new URLs only
+
+    for entry in url_entries:
+        url = entry["url"]
+        segment = entry["segment"]
+
+        if url in existing_urls:
+            # Check if segment is different
+            if existing_urls[url] != segment:
+                print(f"⚠️ URL found in database, but segment is different: {url}")
+                print(f"   - Old segment: {existing_urls[url]}")
+                print(f"   - New segment: {segment}")
+
+                # Update segment if overwriting is enabled
+                if OVERWRITE_SEGMENT:
+                    update_segment(url, segment)
+                    print("✅ Segment updated in database.")
+                else:
+                    print("🚫 Segment overwrite is disabled. Keeping old segment.")
+
+        else:
+            new_urls.append(entry)  # Only add completely new URLs
 
     print(f"✅ {len(new_urls)} new URLs found (not in database).")
     return new_urls

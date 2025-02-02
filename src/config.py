@@ -9,6 +9,9 @@ load_dotenv()
 COGNISM_EMAIL = os.getenv("COGNISM_EMAIL")
 COGNISM_PASSWORD = os.getenv("COGNISM_PASSWORD")
 
+# Retrieve configuration settings
+OVERWRITE_SEGMENT = os.getenv("OVERWRITE_SEGMENT", "False").lower() == "true"
+
 # Function to introduce variability in waiting times
 def randomize_wait_time(base_time):
     return round(base_time * random.uniform(0.5, 1.5), 2)  # Adds variability
