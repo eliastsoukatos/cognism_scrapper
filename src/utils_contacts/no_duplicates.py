@@ -1,6 +1,6 @@
 import sqlite3
 import os
-from utils_contacts.load_file import get_urls_from_file
+from utils_contacts.read_db import get_urls_from_db
 from utils.create_database import create_table
 from config import OVERWRITE_SEGMENT  # Import overwrite setting
 
@@ -65,7 +65,7 @@ def filter_new_urls():
     :return: A list of new URLs that are not present in the database.
     """
     # Load URLs from the CSV file
-    url_entries = get_urls_from_file()
+    url_entries = get_urls_from_db()
     print(f"📥 Loaded {len(url_entries)} URLs from CSV.")
 
     # Get existing URLs from the database

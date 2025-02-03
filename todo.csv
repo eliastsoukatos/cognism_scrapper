@@ -4,14 +4,17 @@ el nombre de la base de datos que sea una variable en el .env,Contacts,Media,0.5
 definir un limite de contactos scrapear por corrida variable en .env,Contacts,Baja,1,to do
 definir un limite al dia definido en .env,Contacts,Baja,1,to do
 corregir el tema de que no hace todos los matches en la base de datos,Contacts,Media,2,to do
-convertir este main en main_contacts.py y va a ser llamado desde un main.py afuera de src,Contacts,Alta,0.5,to do
-mover login fuera de utils_scraper a utils y asegurar que solo lo usamos una vez,Main,0.5,done
-pedir input del url a scrapear y input del segmento,Urls,Alta,0.5,to do
-scrapear urls de la pagina seleccionada y guardar el timestamp,Urls,Alta,1,to do
-guardar las urls en una nueva tabla de la base de datos,Urls,Alta,1,to do
-crear navegador que pasa las paginas hasta llegar al final,Urls,Alta,1,to do
-scrapear cada una de las paginas,Urls,Alta,1,to do
+convertir este main en main_contacts.py y va a ser llamado desde un main.py afuera de src,Contacts,Alta,0.5,done
+mover login fuera de utils_scraper a utils y asegurar que solo lo usamos una vez,Main,Alta,0.5,done
+pedir input del url a scrapear y input del segmento,Urls,Alta,0.5,done
+scrapear urls de la pagina seleccionada y guardar el timestamp,Urls,Alta,1,done
+guardar las urls en una nueva tabla de la base de datos,Urls,Alta,1,done
+crear navegador que pasa las paginas hasta llegar al final,Urls,Alta,1,done
+scrapear cada una de las paginas,Urls,Alta,1,done
 poner un limite diario a las paginas que puedes scrapear,Urls,Baja,1,to do
 conectar load_file con la nueva tabla en la base de datos,Urls,Alta,2,to do
 crear un software que permita exportar la base de datos en csv,Csv,Alta,0.5,to do
+asegurarme de que el numero de scrolls en la parte de urls cambien aleatoriamente tambien,Urls,Media,1,to do
+asegurarme de que todos los tiempos en la seccion de urls sean aleatorios,Urls,Media,0.5,to do
 crear un sistema de segmentacion para que los csv vengan en los batches para haces las campanas,Csv,Alta,1,to do
+,,,3.5,
