@@ -17,30 +17,37 @@ def navigate_and_scrape(driver, segment):
         if urls_data and "URLs" in urls_data:
             save_urls_to_db(urls_data["URLs"])
 
+        # Check pagination text to determine if we're on the last page
+        try:
+            pagination_text = WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "span.t-text-xs.t-mr-2"))
+            ).text
+        except:
+            print("⚠️ Could not find pagination info. Assuming last page.")
+            break  # If we can't find the pagination, assume it's the last page
+
+        # Extract the numbers from the pagination text
+        numbers = [int(num) for num in pagination_text.split() if num.isdigit()]
+
+        if len(numbers) >= 3:
+            current_last = numbers[1]  # Second number in pagination (e.g., 144)
+            total_count = numbers[2]   # Third number in pagination (e.g., 144)
+            
+            if current_last == total_count:
+                print("✅ Reached the last page. Stopping scraping.")
+                break
+
         # Try to find the 'Next' button
         try:
             next_button = WebDriverWait(driver, 5).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "a[data-cognism='paginate-next-a']"))
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "a[data-cognism='paginate-next-a']"))
             )
         except:
-            print("✅ Reached the last page. Stopping scraping.")
+            print("✅ Next button not found. Assuming last page.")
             break  # If the button doesn't exist, stop scraping
-
-        # Check if the button is disabled (if applicable)
-        if "disabled" in next_button.get_attribute("class"):
-            print("✅ Pagination ended (Next button disabled).")
-            break
 
         # Click the next button
         driver.execute_script("arguments[0].click();", next_button)
         time.sleep(3)  # Wait for new data to load
-
-        # After clicking, check if the URL list changes
-        new_urls_data = scrape_urls(driver, segment)
-
-        # If new_urls_data is empty or identical to the previous list, we are at the last page
-        if not new_urls_data or new_urls_data["URLs"] == urls_data["URLs"]:
-            print("✅ No new contacts found. Stopping scraping.")
-            break
 
         page_number += 1  # Move to the next page
