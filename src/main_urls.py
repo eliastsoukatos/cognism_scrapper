@@ -20,11 +20,11 @@ def run_urls_scraper():
     print(f"Now create a search of contacts on Cognism and input their segment.")
 
     # Prompt user for input
-    industry_segment = input("📌 Input the Company's Industry Segment: ")
+    segment = input("📌 Input the Company's Industry Segment: ")
 
-    print(f"✅ Industry segment selected: {industry_segment}")
+    print(f"✅ Industry segment selected: {segment}")
 
     # Llamar a la función scrape_url
-    scrape_urls(driver)
+    scrape_urls(driver, segment)
 
-    return driver, industry_segment  # Optional: Return values for later use
+    return driver, segment  # Optional: Return values for later use
