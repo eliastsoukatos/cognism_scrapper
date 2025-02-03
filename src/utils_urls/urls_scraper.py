@@ -2,25 +2,29 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-def scrape_url(driver):
-    """Extrae el URL de la página actualmente cargada y lo completa con el dominio base."""
+def scrape_urls(driver):
+    """Extrae todos los URLs de perfiles de personas en la página actualmente cargada y los completa con el dominio base."""
     try:
         # Espera a que la página cargue completamente
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
         
-        # Extrae el URL
+        # Extrae solo los URLs de personas (excluyendo compañías)
         try:
-            url_element = driver.find_element(By.XPATH, "//a[contains(@class, 't-text-primary-600')]")
-            relative_url = url_element.get_attribute("href")
-            full_url = f"https://app.cognism.com{relative_url}" if relative_url.startswith("/") else relative_url
+            url_elements = driver.find_elements(By.XPATH, "//a[contains(@href, '/search/prospects/persons/')]")
+            urls = [
+                f"https://app.cognism.com{elem.get_attribute('href')}" if elem.get_attribute('href').startswith("/") else elem.get_attribute('href')
+                for elem in url_elements
+            ]
         except:
-            full_url = "Not found"
+            urls = []
         
-        print(f"🔗 URL: {full_url}")
+        print("🔗 Extracted URLs (People Only):")
+        for url in urls:
+            print(url)
         
-        return {"URL": full_url}
+        return {"URLs": urls}
 
     except Exception as e:
         print(f"⚠️ Error during scraping: {e}")
