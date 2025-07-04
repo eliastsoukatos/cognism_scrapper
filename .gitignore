@@ -181,3 +181,5 @@ testing.txt
 # Databases
 urls.db
 contacts.db
+data/*
+!data/README.md
